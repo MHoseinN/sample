@@ -1,52 +1,52 @@
-import http from './http'
+import http from "./http";
 
-const makeToken = () => `mock-token-${Date.now()}`
+const makeToken = () => `mock-token-${Date.now()}`;
 
 export const loginApi = async ({ emailOrMobile, password }) => {
-  const { data } = await http.get('/users')
+  const { data } = await http.get("/users");
 
   const user = data.find((item) => {
-    const matchIdentity = item.email === emailOrMobile || item.mobile === emailOrMobile
-    const matchPassword = item.password === password
-    return matchIdentity && matchPassword
-  })
+    const matchId = item.email === emailOrMobile || item.mobile === emailOrMobile;
+    const matchPass = item.password === password;
+    return matchId && matchPass
+  });
 
-  if (!user) {
-    throw new Error('ایمیل/موبایل یا رمز عبور اشتباه است.')
+  if(!user){
+    throw new Error ('اطلاعات وارد شده نادرست است.')
   }
 
   return {
-    token: makeToken(),
+    token:makeToken(),
     user
   }
-}
+};
 
-export const registerApi = async (payload) => {
-  const { data: users } = await http.get('/users')
-  const duplicated = users.some((item) => item.email === payload.email || item.mobile === payload.mobile)
+export const registerApi = async (payload)=>{
+  const {data:users} = await http.get('/users')
+  const duplicated = users.some((item) => item.email === payload.email || item.mobile === payload.moblie )
 
-  if (duplicated) {
-    throw new Error('کاربر با این ایمیل یا موبایل از قبل وجود دارد.')
+  if(duplicated){
+    throw new Error ("کاربر با این ایمیل یا موبایل وجود دارد.")
   }
 
-  const now = new Date().toISOString()
-  const requestBody = {
+  const now = new Data().toISOString()
+  const reqBody = {
     ...payload,
-    role: 'viewer',
-    status: 'active',
-    createdAt: now,
-    updatedAt: now
+    role:'viewer',
+    status:"active",
+    createAt : now,
+    updatedAt:now
   }
 
-  const { data } = await http.post('/users', requestBody)
+  const {data} = await http.post("/users" , reqBody)
 
-  return {
-    token: makeToken(),
-    user: data
+  return{
+    token:makeToken(),
+    user : data
   }
 }
 
-export const fetchMeApi = async (userId) => {
-  const { data } = await http.get(`/users/${userId}`)
-  return data
+export const fetchMeApi = async(userId)=> {
+const {data} = await http.get(`/users/${userId}`)
+return data
 }

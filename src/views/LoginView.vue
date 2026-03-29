@@ -1,24 +1,24 @@
 <template>
-  <section class="card">
-    <h2>ورود</h2>
+  <section>
+    <h2> login </h2>
 
-    <form @submit.prevent="onSubmit" class="form">
-      <input v-model="form.emailOrMobile" type="text" placeholder="ایمیل یا موبایل" required />
-      <input v-model="form.password" type="password" placeholder="رمز عبور" required />
-      <button type="submit" :disabled="authStore.loading">
-        {{ authStore.loading ? 'در حال ورود...' : 'ورود' }}
-      </button>
+    <form @submit.prevent="onSubmit">
+      <input v-model="form.emailOrMobile" type="text" placeholder="username" required>
+      <input v-model="form.password" type="password" placeholder="password" required>
+      <button type="submit" :disabled="authStore.loading">{{ authStore.loading ? 'در حال ورود' : "ورود" }}</button>
     </form>
 
-    <p v-if="authStore.error" class="error">{{ authStore.error }}</p>
+    <p v-if="authStore.error">{{ authStore.error }} </p>
+
   </section>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth.store'
+import { reactive } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth.store';
 
+const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
@@ -30,30 +30,19 @@ const form = reactive({
 const onSubmit = async () => {
   try {
     await authStore.login(form)
-    router.push('/dashboard')
-  } catch (err) {
+
+    const redirect = route.query.redirect
+    if (typeof redirect === "string" && redirect.length > 0) {
+      router.push(redirect)
+    }
+    else {
+      router.push("/dashboard")
+    }
+  }
+  catch (err) {
     return
   }
 }
+
+
 </script>
-
-<style scoped>
-.card {
-  max-width: 420px;
-}
-
-.form {
-  display: grid;
-  gap: 10px;
-}
-
-input,
-button {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-.error {
-  color: #b91c1c;
-}
-</style>

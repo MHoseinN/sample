@@ -1,18 +1,17 @@
-import axios from 'axios'
+import axios from "axios";
 
 const http = axios.create({
   baseURL: 'http://localhost:3001',
-  timeout: 10000
+  timeout:10000
 })
 
-http.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+http.interceptors.request.use((config)=> {
+const token = localStorage.getItem('token')
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-
-  return config
+if(token){
+  config.headers.Authorization = `bearer ${token}`
+}
+return config
 })
 
 export default http

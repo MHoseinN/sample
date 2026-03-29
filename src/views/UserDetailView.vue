@@ -23,7 +23,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProfileByUserIdApi } from '../api/profiles.api'
+import { getProfilByUserIdApi } from '../api/profiles.api'
 import { useUsersStore } from '../stores/users.store'
 
 const route = useRoute()
@@ -35,7 +35,7 @@ const user = computed(() => usersStore.selectedUser)
 onMounted(async () => {
   const id = Number(route.params.id)
   await usersStore.fetchUserById(id)
-  profile.value = await getProfileByUserIdApi(id)
+  profile.value = await getProfilByUserIdApi(id)
 })
 </script>
 
